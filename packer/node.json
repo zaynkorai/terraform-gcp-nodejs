@@ -1,0 +1,28 @@
+{
+  "variables": {
+        "gcloud_account_json": "filename",
+        "gcloud_project_id": "projectname__on_gcp"
+  },
+  "builders": [
+    {
+      "type": "googlecompute",
+      "account_file": "{{user `gcloud_account_json`}}",
+      "project_id": "{{user `gcloud_project_id`}}",
+      "ssh_username":"peekaboo",
+      "source_image_family": "ubuntu-1804-lts",
+      "image_name": "node-golden-{{timestamp}}",
+      "zone": "asia-east2-a",
+      "machine_type":"f1-micro",
+      "disk_size": "10",
+      "on_host_maintenance":"TERMINATE",
+      "image_family":"golden-nodejs"
+
+    }
+  ],
+  "provisioners": [
+      {
+           "type": "shell",
+           "script": "../scripts/install_node.sh"
+      }
+  ]
+}
