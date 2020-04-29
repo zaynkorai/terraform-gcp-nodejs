@@ -30,15 +30,3 @@ resource "google_compute_firewall" "allow-ssh" {
   }
   target_tags = ["ssh"]
 }
-
-
-# allow nodejs
-resource "google_compute_firewall" "allow-nodejs" {
-  name    = "${var.app_name}-fw-allow-nodejs"
-  network = "${google_compute_network.vpc.name}"
-  allow {
-    protocol = "tcp"
-    ports    = ["8080"]
-  }
-  target_tags = ["http-nodejs"]
-}

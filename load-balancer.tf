@@ -3,7 +3,7 @@ resource "google_compute_global_forwarding_rule" "global_forwarding_rule" {
   name       = "${var.app_name}-global-forwarding-rule"
   project    = var.project_name
   target     = google_compute_target_http_proxy.target_http_proxy.self_link
-  port_range = "8080"
+  port_range = "80"
 }
 
 # used by one or more global forwarding rule to route incoming HTTP requests to a URL map
@@ -17,7 +17,7 @@ resource "google_compute_target_http_proxy" "target_http_proxy" {
 resource "google_compute_backend_service" "backend_service" {
   name                  = "${var.app_name}-backend-service"
   project               = "${var.project_name}"
-  port_name             = "http-nodejs"
+  port_name             = "http"
   protocol              = "HTTP"
   load_balancing_scheme = "EXTERNAL"
   health_checks         = ["${google_compute_health_check.healthcheck.self_link}"]
@@ -39,8 +39,8 @@ resource "google_compute_instance_group_manager" "frontend_private_group" {
     instance_template = "${google_compute_instance_template.frontend_server.self_link}"
   }
   named_port {
-    name = "http-nodejs"
-    port = 8080
+    name = "http"
+    port = 80
   }
 }
 
@@ -50,7 +50,7 @@ resource "google_compute_health_check" "healthcheck" {
   timeout_sec        = 1
   check_interval_sec = 1
   http_health_check {
-    port = 8080
+    port = 80
   }
 }
 
